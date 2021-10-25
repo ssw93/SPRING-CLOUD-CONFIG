@@ -1,0 +1,61 @@
+# Spring properties
+spring:
+  application:
+    name: CloudApiTwo  # Identify this application
+  boot:
+    #Spring boot admin settings
+    admin:
+#      url: http://localhost:2223
+      routes:
+        endpoints: env,metrics,trace,dump,jolokia,info,configprops,trace,logfile,refresh,flyway,liquibase,heapdump,loggers,auditevents,hystrix.stream,docs
+        #Timeintervalin ms to update the status of App
+      monitor:
+        perio: 10000
+        #LifeTime of App status in ms.
+        status-lifetime: 10000
+        #Connection Timeout in ms when App's status and info
+        connect-timeout: 2000
+        #Read Timeout in ms when App's status and info
+        read-timeout: 5000
+      metadata-keys-to-sanitize: .password$,.*secret$,.*key$,.$token$,.credentials.,.*vcap_services$
+##INFRA_ADMIN Settings
+project:
+  name: spring-cloud-api-two
+  artifactId: spring-cloud-api-two
+  description: spring-cloud-api-two
+info:
+  app:
+    encoding: Encoding - UTF-8
+  java:
+    source: Source - java ver
+    target: Instance123232232323 - Java ver
+  spring:
+    profiles: ${spring.profiles.active:default}
+  build:
+    name: ${project.name}
+    artifact: ${project.artifactId}
+    description: ${project.description}
+
+management:     # If you set off security...
+  security:
+    enabled: false
+
+datasource:
+  portal:
+    #driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://115.68.46.219:3306/testdb
+    #username: testuser
+    #password: 'testuser'
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${vcap.services.mysql-service.credentials.hostname}:${vcap.services.mysql-service.credentials.port}/${vcap.services.mysql-service.credentials.name}
+    username: ${vcap.services.mysql-service.credentials.username}
+    password: ${vcap.services.mysql-service.credentials.password}
+
+jpa:
+  database: mysql
+  show-sql: true
+  hibernate:
+    ddl-auto: create-drop
+    naming:
+      strategy: org.hibernate.dialect.MySQL5Dialect
+  generate-ddl: false
